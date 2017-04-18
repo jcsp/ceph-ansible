@@ -19,6 +19,8 @@
     listen: "restart ceph mons"
 
   when:
+    - socket.rc == 0
+    - ceph_current_fsid.rc == 0
     - mon_group_name in group_names
 
 # This does not just restart OSDs but everything else too. Unfortunately
@@ -37,9 +39,11 @@
   - name: restart ceph osds daemon(s)
     command: /tmp/restart_osd_daemon.sh
     listen: "restart ceph osds"
-    when:
-      - handler_health_osd_check
+    when: handler_health_osd_check
+
   when:
+    - socket.rc == 0
+    - ceph_current_fsid.rc == 0
     - osd_group_name in group_names
 
 - name: restart ceph mdss
