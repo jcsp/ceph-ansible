@@ -1,0 +1,7 @@
+---
+- name: create rgw pools if rgw_pool is defined
+  shell: |
+    ceph --connect-timeout 5 --cluster {{ cluster }} osd pool {{ item.key }} {{ item.value.pg_num }}
+  changed_when: false
+  failed_when: false
+  with_dict: "{{ rgw_pool }}"

@@ -56,6 +56,8 @@
 
 - include: set_osd_pool_default_pg_num.yml
 
+- include: set_rgw_pool_pg_num.yml
+
 - name: test if rbd exists
   command: ceph --cluster {{ cluster }} osd pool get rbd size
   changed_when: false
@@ -76,6 +78,9 @@
     - rbd_pool_exist.rc == 0
     - global_in_ceph_conf_overrides
     - ceph_conf_overrides.global.osd_pool_default_size is defined
+
+- include: rgw_pool_pgs.yml
+  when: "{{ rgw_pool }}"
 
 - include: openstack_config.yml
   when:
